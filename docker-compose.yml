@@ -15,7 +15,6 @@ services:
     depends_on:
       fastapi10:
         condition: service_healthy
-        required: true
 
   fastapi10:
     build:
@@ -33,7 +32,6 @@ services:
     depends_on:
       db10:
         condition: service_healthy
-        required: true
     networks:
       my-network10:
         aliases:
