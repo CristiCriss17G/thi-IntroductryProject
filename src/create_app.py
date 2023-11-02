@@ -18,13 +18,13 @@ init_healthcheck()
 
 charlie.init()
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # Allows all origins
-#     allow_credentials=True,
-#     allow_methods=["*"],  # Allows all methods
-#     allow_headers=["*"],  # Allows all headers
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 app.include_router(healthcheck.router)
 
@@ -43,11 +43,17 @@ async def chat(question: str):
         return "question parameter is missing"
 
 
-@app.get("/answers/", response_model=List[schemas_answer.Answer])
+@app.get("/answers/", response_model=schemas_answer.AnswerReponse)
 async def read_answers(
-    skip: int = 0, limit: int = 10, trained: int = 0, db: Session = Depends(get_db)
+    skip: int = 0,
+    limit: int = 10,
+    page: int = 1,
+    trained: int = 0,
+    db: Session = Depends(get_db),
 ):
-    answers = answer_crud.get_answers(db, skip=skip, limit=limit, trained=trained)
+    answers = answer_crud.get_answers(
+        db, skip=skip, limit=limit, page=page, trained=trained
+    )
     return answers
 
 
@@ -60,7 +66,7 @@ async def create_answers(
     except IntegrityError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Answer already exists"
-        )
+        ) from e
     return db_answers
 
 

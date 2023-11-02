@@ -14,6 +14,7 @@
 
 {#if isMobile}
 	<div class="container p-10 flex flex-col place-items-center gap-4 h-full place-content-center">
+		<a class="btn" href="/answers">Answers</a>
 		<LightSwitch />
 		<button
 			class="btn hover:rotate-45"
@@ -23,16 +24,9 @@
 		>
 			<Cog6Tooth />
 		</button>
-		<a
-			class="btn variant-ghost-surface"
-			href="https://github.com/CristiCriss17G/Base64Bender"
-			target="_blank"
-			rel="noreferrer"
-		>
-			GitHub
-		</a>
 	</div>
 {:else}
+	<a class="btn" href="/answers">Answers</a>
 	<LightSwitch />
 	<button
 		class="btn hover:rotate-45"

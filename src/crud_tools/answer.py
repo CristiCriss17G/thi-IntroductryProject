@@ -15,15 +15,43 @@ def get_answer(db: Session, answer_id: int):
 
 
 def get_answers(
-    db: Session, skip: int = 0, limit: int = 10, trained: int = 0
-) -> List[models.Answer]:
+    db: Session, skip: int = 0, limit: int = 10, page: int = 1, trained: int = 0
+):
     if trained != 0:
-        return (
+        answers = (
             db.query(models.Answer)
-            .filter(models.Answer.already_trained == (trained == 1))
+            .filter_by(already_trained=(trained == 1))
+            .offset(skip if page == 1 else (page - 1) * limit)
+            .limit(limit)
             .all()
         )
-    return db.query(models.Answer).offset(skip).limit(limit).all()
+        answers_count = (
+            db.query(models.Answer).filter_by(already_trained=(trained == 1)).count()
+        )
+        return {
+            "answers": answers,
+            "total": answers_count,
+            "skip": skip,
+            "limit": limit,
+            "pages": int(answers_count / limit) + 1,
+            "page": page,
+        }
+    else:
+        answers = (
+            db.query(models.Answer)
+            .offset(skip if page == 1 else (page - 1) * limit)
+            .limit(limit)
+            .all()
+        )
+        answers_count = db.query(models.Answer).count()
+        return {
+            "answers": answers,
+            "total": answers_count,
+            "skip": skip,
+            "limit": limit,
+            "pages": int(answers_count / limit) + 1,
+            "page": page,
+        }
 
 
 def create_answer(db: Session, answer: schemas_answer.AnswerCreate):

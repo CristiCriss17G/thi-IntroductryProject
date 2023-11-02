@@ -26,3 +26,12 @@ class Answer(AnswerBase):
 
 
 Answer.model_rebuild()
+
+
+class AnswerReponse(BaseModel):
+    answers: List[Answer]
+    total: int
+    skip: int
+    limit: int
+    pages: int
+    page: int

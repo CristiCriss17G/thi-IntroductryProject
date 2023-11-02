@@ -1,20 +1,20 @@
 version: "3.1"
 
 services:
-  nginx10:
-    container_name: nginx10
-    build:
-      context: ./web
-      dockerfile: ./Dockerfile
-    ports:
-      - "5005:80"
-    networks:
-      my-network10:
-        aliases:
-          - nginx10
-    depends_on:
-      fastapi10:
-        condition: service_healthy
+  # nginx10:
+  #   container_name: nginx10
+  #   build:
+  #     context: ./web
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - "5005:80"
+  #   networks:
+  #     my-network10:
+  #       aliases:
+  #         - nginx10
+  #   depends_on:
+  #     fastapi10:
+  #       condition: service_healthy
 
   fastapi10:
     build:

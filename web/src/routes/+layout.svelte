@@ -10,6 +10,9 @@
 		Toast
 	} from '@skeletonlabs/skeleton';
 
+	import { page } from '$app/stores';
+	$: console.log($page.route);
+
 	import MainMenu from '$lib/components/MainMenu.svelte';
 	import MediaQuery from '$lib/components/MediaQuery.svelte';
 	import Bars3 from '$lib/components/icons/Bars3.svelte';
@@ -43,7 +46,7 @@
 		<!-- App Bar -->
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">Charlie</strong>
+				<a href="/"><strong class="text-xl uppercase">Charlie</strong></a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<MediaQuery query="(min-width: 768px)" let:matches>
@@ -62,5 +65,9 @@
 	<div class="container p-10 mx-auto">
 		<slot />
 	</div>
-	<svelte:fragment slot="pageFooter"><ChatInput /></svelte:fragment>
+	<svelte:fragment slot="pageFooter">
+		{#if $page.route.id === '/'}
+			<ChatInput />
+		{/if}
+	</svelte:fragment>
 </AppShell>
