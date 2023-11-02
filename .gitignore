@@ -1,4 +1,6 @@
-output.json
+*.json
+!web/*.json
 **/__pycache__
 **/.venv
 sentence_tokenizer.pickle
+*.Identifier
