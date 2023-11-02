@@ -1,0 +1,81 @@
+version: "3.1"
+
+services:
+  nginx10:
+    container_name: nginx10
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    ports:
+      - "5005:80"
+    networks:
+      my-network10:
+        aliases:
+          - nginx10
+    depends_on:
+      fastapi10:
+        condition: service_healthy
+        required: true
+
+  fastapi10:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: fastapi10
+    entrypoint: /app/startup.sh
+    environment:
+      - FASTAPI10_HOST
+      - FASTAPI10_PORT
+    ports:
+      - "8010:8000"
+    volumes:
+      - ./:/app
+    depends_on:
+      db10:
+        condition: service_healthy
+        required: true
+    networks:
+      my-network10:
+        aliases:
+          - fastapi-app10
+
+  db10:
+    image: postgres:16-alpine
+    # restart: always
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
+    # ports:
+    #   - 5432:5432
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db10:/var/lib/postgresql/data
+    networks:
+      my-network10:
+        aliases:
+          - db10
+
+  # adminer:
+  #   image: adminer
+  #   # restart: always
+  #   depends_on:
+  #     db10:
+  #       condition: service_healthy
+  #       required: true
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     my-network10:
+  #       aliases:
+  #         - adminer10
+networks:
+  my-network10:
+
+volumes:
+  db10:

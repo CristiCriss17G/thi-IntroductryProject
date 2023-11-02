@@ -1,0 +1,32 @@
+version: "3.1"
+
+services:
+  nginx10:
+    container_name: nginx10
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    ports:
+      - "5005:80"
+    volumes:
+      - ./web/site.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - my-network10
+    depends_on:
+      - flask10
+  flask10:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.old
+    container_name: flask10
+    command: gunicorn --bind 0.0.0.0:8000 --workers 2 "app.create_app:create_app()"
+    ports:
+      - "8010:8000"
+    volumes:
+      - ./:/app
+    networks:
+      my-network10:
+        aliases:
+          - flask-app10
+networks:
+  my-network10:

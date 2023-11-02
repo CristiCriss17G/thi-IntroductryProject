@@ -1,0 +1,24 @@
+/* styles for chatbot */
+#chat-container {
+    height: 90vh;
+}
+
+#chat-log {
+    height: 80vh;
+    border: 1px solid black;
+    margin-bottom: 5px;
+    overflow-y: auto;
+}
+
+input {
+    width: 80%;
+}
+
+.botstyle {
+    background-color: rgb(246, 234, 221);
+    padding-left: 10px;
+}
+
+.userstyle {
+    background-color: rgb(231, 250, 248);
+}
